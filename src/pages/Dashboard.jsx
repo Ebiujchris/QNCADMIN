@@ -7,6 +7,7 @@ import SystemStats from '../components/SystemStats'
 import UserManagement from '../components/UserManagement'
 import PaymentManagement from '../components/PaymentManagement'
 import AdminRequests from '../components/AdminRequests'
+import ProviderRequests from '../components/ProviderRequests'
 import api from '../config/api'
 
 function Dashboard({ user }) {
@@ -16,6 +17,7 @@ function Dashboard({ user }) {
   const [allBookings, setAllBookings] = useState([])
   const [providers, setProviders] = useState([])
   const [adminRequests, setAdminRequests] = useState([])
+  const [providerRequests, setProviderRequests] = useState([])
   const [loading, setLoading] = useState(true)
   const { showSuccess, showError } = useToast()
 
@@ -28,12 +30,13 @@ function Dashboard({ user }) {
       const token = localStorage.getItem('adminToken')
       const headers = { Authorization: `Bearer ${token}` }
 
-      const [statsRes, pendingRes, allRes, providersRes, adminReqRes] = await Promise.all([
+      const [statsRes, pendingRes, allRes, providersRes, adminReqRes, providerReqRes] = await Promise.all([
         api.get('/admin/stats'),
         api.get('/admin/bookings/pending'),
         api.get('/admin/bookings'),
         api.get('/admin/providers'),
-        api.get('/admin/admin-requests')
+        api.get('/admin/admin-requests'),
+        api.get('/admin/provider-requests')
       ])
 
       setStats(statsRes.data)
@@ -41,6 +44,7 @@ function Dashboard({ user }) {
       setAllBookings(allRes.data)
       setProviders(providersRes.data)
       setAdminRequests(adminReqRes.data)
+      setProviderRequests(providerReqRes.data)
     } catch (error) {
       showError('Failed to load dashboard data')
       console.error('Dashboard error:', error)
@@ -57,6 +61,7 @@ function Dashboard({ user }) {
   const tabs = [
     { id: 'overview', label: '📊 Overview', icon: '📊' },
     { id: 'pending', label: '🚨 Pending Bookings', icon: '🚨', count: pendingBookings.length },
+    { id: 'provider-requests', label: '👩‍⚕️ Provider Applications', icon: '👩‍⚕️', count: providerRequests.length },
     { id: 'admin-requests', label: '🔐 Admin Requests', icon: '🔐', count: adminRequests.length },
     { id: 'bookings', label: '📋 All Bookings', icon: '📋' },
     { id: 'users', label: '👥 User Management', icon: '👥' },
@@ -96,6 +101,11 @@ function Dashboard({ user }) {
             <span className="stat-label">Total Users</span>
           </div>
           <div className="stat-card">
+            <span className="stat-icon">👩‍⚕️</span>
+            <span className="stat-number">{providerRequests.length}</span>
+            <span className="stat-label">Provider Applications</span>
+          </div>
+          <div className="stat-card">
             <span className="stat-icon">🔐</span>
             <span className="stat-number">{adminRequests.length}</span>
             <span className="stat-label">Admin Requests</span>
@@ -112,6 +122,11 @@ function Dashboard({ user }) {
             <button className="btn btn-success" onClick={() => setActiveTab('pending')}>
               🚨 View Pending ({pendingBookings.length})
             </button>
+            {providerRequests.length > 0 && (
+              <button className="btn btn-info" onClick={() => setActiveTab('provider-requests')}>
+                👩‍⚕️ Provider Applications ({providerRequests.length})
+              </button>
+            )}
             {adminRequests.length > 0 && (
               <button className="btn btn-warning" onClick={() => setActiveTab('admin-requests')}>
                 🔐 Admin Requests ({adminRequests.length})
@@ -174,6 +189,12 @@ function Dashboard({ user }) {
               <PendingBookings 
                 bookings={pendingBookings}
                 providers={providers}
+                onRefresh={refreshData}
+              />
+            )}
+            
+            {activeTab === 'provider-requests' && (
+              <ProviderRequests 
                 onRefresh={refreshData}
               />
             )}
