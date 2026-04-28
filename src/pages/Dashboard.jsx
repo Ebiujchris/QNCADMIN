@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useToast } from '../contexts/ToastContext'
 import LoadingSpinner from '../components/LoadingSpinner'
+import AdminSidebar from '../components/AdminSidebar'
 import PendingBookings from '../components/PendingBookings'
 import AllBookings from '../components/AllBookings'
 import SystemStats from '../components/SystemStats'
@@ -59,21 +60,44 @@ function Dashboard({ user }) {
   }
 
   const tabs = [
-    { id: 'overview', label: '📊 Overview', icon: '📊' },
+    { id: 'overview', label: '📊 Overview', icon: '📊', count: 0 },
     { id: 'pending', label: '🚨 Pending Bookings', icon: '🚨', count: pendingBookings.length },
-    { id: 'provider-requests', label: '👩‍⚕️ Provider Applications', icon: '👩‍⚕️', count: providerRequests.length },
+    { id: 'provider-requests', label: '👩‍⚕️ Provider Apps', icon: '👩‍⚕️', count: providerRequests.length },
     { id: 'admin-requests', label: '🔐 Admin Requests', icon: '🔐', count: adminRequests.length },
-    { id: 'bookings', label: '📋 All Bookings', icon: '📋' },
-    { id: 'users', label: '👥 User Management', icon: '👥' },
-    { id: 'payments', label: '💰 Payments', icon: '💰' }
+    { id: 'bookings', label: '📋 All Bookings', icon: '📋', count: 0 },
+    { id: 'users', label: '👥 Users', icon: '👥', count: 0 },
+    { id: 'payments', label: '💰 Payments', icon: '💰', count: 0 }
   ]
+
+  const logout = () => {
+    localStorage.removeItem('adminToken')
+    localStorage.removeItem('adminUser')
+  }
 
   if (loading) {
     return <LoadingSpinner size="large" text="Loading admin dashboard..." />
   }
 
   return (
-    <div>
+    <div style={{display: 'flex', minHeight: '100vh'}}>
+      <AdminSidebar 
+        user={user} 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        tabs={tabs}
+        logout={logout}
+      />
+      
+      <div style={{
+        marginLeft: '280px',
+        flex: 1,
+        padding: '32px',
+        backgroundColor: '#f8fafc',
+        minHeight: '100vh',
+        transition: 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+      }}
+      className="dashboard-main-content"
+      >
       {/* Admin Header */}
       <div className="admin-header">
         <div className="container">
@@ -228,6 +252,7 @@ function Dashboard({ user }) {
             )}
           </div>
         </div>
+      </div>
       </div>
     </div>
   )
