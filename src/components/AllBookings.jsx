@@ -1,8 +1,25 @@
 import { useState } from 'react'
+import { useToast } from '../contexts/ToastContext'
+import api from '../config/api'
 
 function AllBookings({ bookings, onRefresh }) {
   const [filterStatus, setFilterStatus] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
+  const [payingId, setPayingId] = useState(null)
+  const { showSuccess, showError } = useToast()
+
+  const markAsPaid = async (bookingId, price) => {
+    setPayingId(bookingId)
+    try {
+      await api.post(`/payments/${bookingId}/mark-paid`)
+      showSuccess(`Payment of UGX ${parseFloat(price).toLocaleString()} confirmed!`)
+      onRefresh()
+    } catch (error) {
+      showError(error.response?.data?.message || 'Failed to mark as paid.')
+    } finally {
+      setPayingId(null)
+    }
+  }
 
   const getStatusBadge = (status) => {
     const statusClasses = {
@@ -131,29 +148,45 @@ function AllBookings({ bookings, onRefresh }) {
                         <strong>Provider:</strong> {booking.provider_name} ({booking.provider_type})
                       </p>
                       {booking.price && (
-                        <p style={{color: '#065f46', fontSize: '0.875rem', margin: '2px 0', fontWeight: '500'}}>
-                          <strong>Price:</strong> UGX {parseFloat(booking.price).toLocaleString()}
-                        </p>
+                        <div>
+                          {booking.rate_per_day && booking.days && (
+                            <p style={{color: '#6b7280', fontSize: '0.8rem', margin: '2px 0'}}>
+                              UGX {parseFloat(booking.rate_per_day).toLocaleString()}/day × {booking.days} day(s)
+                            </p>
+                          )}
+                          <p style={{color: '#065f46', fontSize: '0.875rem', margin: '2px 0', fontWeight: '600'}}>
+                            <strong>Total:</strong> UGX {parseFloat(booking.price).toLocaleString()}
+                          </p>
+                        </div>
                       )}
                     </div>
                   )}
                 </div>
                 
-                <div style={{textAlign: 'right', minWidth: '120px'}}>
+                <div style={{textAlign: 'right', minWidth: '140px'}}>
                   <span className={getStatusBadge(booking.status)}>
                     {booking.status}
                   </span>
-                  <p style={{color: '#6b7280', fontSize: '0.75rem', margin: '4px 0'}}>
-                    {booking.urgency !== 'normal' && (
+                  {booking.urgency !== 'normal' && (
+                    <p style={{margin: '4px 0'}}>
                       <span style={{
                         color: booking.urgency === 'emergency' ? '#ef4444' : '#f59e0b',
-                        fontWeight: '600',
-                        textTransform: 'uppercase'
+                        fontWeight: '600', fontSize: '0.75rem', textTransform: 'uppercase'
                       }}>
                         {booking.urgency}
                       </span>
-                    )}
-                  </p>
+                    </p>
+                  )}
+                  {booking.status === 'assigned' && booking.price && (
+                    <button
+                      onClick={() => markAsPaid(booking.id, booking.price)}
+                      disabled={payingId === booking.id}
+                      className="btn btn-success btn-small"
+                      style={{marginTop: '10px', width: '100%', fontSize: '0.8rem'}}
+                    >
+                      {payingId === booking.id ? '⏳...' : '💳 Mark Paid'}
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

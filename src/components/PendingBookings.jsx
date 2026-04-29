@@ -1,48 +1,49 @@
 import { useState } from 'react'
 import { useToast } from '../contexts/ToastContext'
 import LoadingSpinner from './LoadingSpinner'
-import axios from 'axios'
+import api from '../config/api'
 
 function PendingBookings({ bookings, providers, onRefresh }) {
   const [selectedBooking, setSelectedBooking] = useState(null)
   const [selectedProvider, setSelectedProvider] = useState('')
-  const [servicePrice, setServicePrice] = useState('')
+  const [ratePerDay, setRatePerDay] = useState('')
+  const [days, setDays] = useState('')
   const [assignmentLoading, setAssignmentLoading] = useState(false)
   const { showSuccess, showError } = useToast()
 
-  const assignProvider = async () => {
-    if (!selectedBooking || !selectedProvider) {
-      showError('Please select a provider')
-      return
-    }
+  const totalPrice = ratePerDay && days ? parseFloat(ratePerDay) * parseInt(days) : 0
 
-    if (!servicePrice || isNaN(servicePrice) || parseFloat(servicePrice) <= 0) {
-      showError('Please enter a valid price in UGX')
-      return
-    }
+  const assignProvider = async () => {
+    if (!selectedBooking || !selectedProvider) return showError('Please select a provider')
+    if (!ratePerDay || parseFloat(ratePerDay) <= 0) return showError('Please enter a valid rate per day')
+    if (!days || parseInt(days) <= 0) return showError('Please enter a valid number of days')
 
     setAssignmentLoading(true)
     try {
-      const token = localStorage.getItem('adminToken')
-      await axios.post(`/api/admin/bookings/${selectedBooking.id}/assign`, 
-        { 
-          providerId: selectedProvider,
-          price: parseFloat(servicePrice)
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
+      await api.post(`/admin/bookings/${selectedBooking.id}/assign`, {
+        providerId: selectedProvider,
+        ratePerDay: parseFloat(ratePerDay),
+        days: parseInt(days)
+      })
 
-      showSuccess(`Provider assigned successfully with price UGX ${parseFloat(servicePrice).toLocaleString()}! Patient and provider have been notified.`)
+      showSuccess(`Provider assigned! Total: UGX ${totalPrice.toLocaleString()} (${days} day(s) × UGX ${parseFloat(ratePerDay).toLocaleString()}/day)`)
       setSelectedBooking(null)
       setSelectedProvider('')
-      setServicePrice('')
-      onRefresh() // Refresh data
+      setRatePerDay('')
+      setDays('')
+      onRefresh()
     } catch (error) {
       showError('Failed to assign provider. Please try again.')
-      console.error('Assignment error:', error)
     } finally {
       setAssignmentLoading(false)
     }
+  }
+
+  const resetModal = () => {
+    setSelectedBooking(null)
+    setSelectedProvider('')
+    setRatePerDay('')
+    setDays('')
   }
 
   const getServiceIcon = (serviceType) => {
@@ -208,49 +209,66 @@ function PendingBookings({ bookings, providers, onRefresh }) {
             </div>
 
             <div className="form-group">
-              <label>Service Price (UGX)</label>
+              <label>Rate Per Day (UGX)</label>
               <div style={{position: 'relative'}}>
                 <input
                   type="number"
-                  value={servicePrice}
-                  onChange={(e) => setServicePrice(e.target.value)}
-                  placeholder="Enter price in Uganda Shillings"
+                  value={ratePerDay}
+                  onChange={(e) => setRatePerDay(e.target.value)}
+                  placeholder="Enter daily rate"
                   disabled={assignmentLoading}
                   min="0"
                   step="1000"
                   style={{paddingLeft: '50px'}}
                 />
                 <span style={{
-                  position: 'absolute',
-                  left: '16px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: '#6b7280',
-                  fontWeight: '500'
-                }}>
-                  UGX
-                </span>
+                  position: 'absolute', left: '16px', top: '50%',
+                  transform: 'translateY(-50%)', color: '#6b7280', fontWeight: '500'
+                }}>UGX</span>
               </div>
-              <small style={{color: '#6b7280', display: 'block', marginTop: '4px'}}>
-                Set the service price that the patient will pay
-              </small>
             </div>
+
+            <div className="form-group">
+              <label>Number of Days</label>
+              <input
+                type="number"
+                value={days}
+                onChange={(e) => setDays(e.target.value)}
+                placeholder="Enter number of days"
+                disabled={assignmentLoading}
+                min="1"
+                step="1"
+              />
+            </div>
+
+            {ratePerDay && days && (
+              <div style={{
+                padding: '16px', backgroundColor: '#ecfdf5', borderRadius: '8px',
+                border: '2px solid #10b981', marginBottom: '16px'
+              }}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <span style={{color: '#065f46', fontWeight: '600'}}>Total Service Fee:</span>
+                  <span style={{color: '#065f46', fontWeight: '700', fontSize: '1.25rem'}}>
+                    UGX {totalPrice.toLocaleString()}
+                  </span>
+                </div>
+                <div style={{fontSize: '0.85rem', color: '#6b7280', marginTop: '4px'}}>
+                  {days} day(s) × UGX {parseFloat(ratePerDay).toLocaleString()}/day
+                </div>
+              </div>
+            )}
 
             <div style={{display: 'flex', gap: '12px', marginTop: '24px'}}>
               <button 
                 onClick={assignProvider}
                 className="btn btn-success"
-                disabled={!selectedProvider || !servicePrice || assignmentLoading}
+                disabled={!selectedProvider || !ratePerDay || !days || assignmentLoading}
                 style={{flex: 1}}
               >
                 {assignmentLoading ? <LoadingSpinner size="small" text="Assigning..." /> : '✅ Assign Provider'}
               </button>
               <button 
-                onClick={() => {
-                  setSelectedBooking(null)
-                  setSelectedProvider('')
-                  setServicePrice('')
-                }}
+                onClick={resetModal}
                 className="btn btn-outline"
                 disabled={assignmentLoading}
                 style={{flex: 1}}
