@@ -4,9 +4,9 @@ function Navbar({ user, logout }) {
   return (
     <nav className="navbar">
       <div className="container">
-        <Link to="/" className="logo">
-          <img src="/images/new site logo.jpg" alt="QNC Admin" className="logo-image" />
-          <span className="logo-text">QNC ADMIN PANEL</span>
+        <Link to="/" className="logo" style={{display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none'}}>
+          <img src="/images/QNC logo.png" alt="QNC" style={{height: '36px', width: 'auto', objectFit: 'contain', borderRadius: '6px'}} />
+          <span className="logo-text">QNC Admin</span>
         </Link>
         <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
           {user ? (
