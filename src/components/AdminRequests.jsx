@@ -68,8 +68,8 @@ function AdminRequests({ onRefresh }) {
         <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
           {requests.map(request => (
             <div key={request.id} className="card">
-              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px'}}>
-                <div style={{flex: 1}}>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', flexWrap: 'wrap', gap: '12px'}}>
+                <div style={{flex: 1, minWidth: '200px'}}>
                   <div style={{display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px'}}>
                     <span style={{fontSize: '1.5rem'}}>👤</span>
                     <div>
@@ -87,26 +87,24 @@ function AdminRequests({ onRefresh }) {
                     </p>
                   </div>
 
-                  <div style={{display: 'flex', gap: '16px', fontSize: '0.875rem', color: '#6b7280'}}>
+                  <div style={{display: 'flex', gap: '16px', fontSize: '0.875rem', color: '#6b7280', flexWrap: 'wrap'}}>
                     <span>📅 Requested: {new Date(request.created_at).toLocaleDateString()}</span>
                     <span>👤 User Since: {new Date(request.user_created_at).toLocaleDateString()}</span>
                   </div>
                 </div>
 
-                <div style={{display: 'flex', gap: '8px', marginLeft: '16px'}}>
+                <div style={{display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
                   <button
-                    className="btn btn-success"
+                    className="btn btn-success btn-small"
                     onClick={() => handleRequest(request.id, 'approve')}
                     disabled={processing[request.id]}
-                    style={{minWidth: '100px'}}
                   >
                     {processing[request.id] ? '⏳' : '✅ Approve'}
                   </button>
                   <button
-                    className="btn btn-danger"
+                    className="btn btn-danger btn-small"
                     onClick={() => handleRequest(request.id, 'reject')}
                     disabled={processing[request.id]}
-                    style={{minWidth: '100px'}}
                   >
                     {processing[request.id] ? '⏳' : '❌ Reject'}
                   </button>
