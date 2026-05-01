@@ -19,16 +19,15 @@ function AdminSidebar({ user, activeTab, setActiveTab, tabs, logout }) {
         onClick={() => setIsMobileOpen(!isMobileOpen)}
         style={{
           position: 'fixed',
-          top: '20px',
-          left: '20px',
+          top: '16px',
+          left: '16px',
           zIndex: 1001,
           background: 'white',
           border: 'none',
           borderRadius: '12px',
-          padding: '12px',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-          cursor: 'pointer',
-          display: 'none'
+          padding: '10px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+          cursor: 'pointer'
         }}
       >
         <div style={{width: '24px', height: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
@@ -50,8 +49,7 @@ function AdminSidebar({ user, activeTab, setActiveTab, tabs, logout }) {
             right: 0,
             bottom: 0,
             background: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 999,
-            display: 'none'
+            zIndex: 999
           }}
         />
       )}
@@ -325,41 +323,16 @@ function AdminSidebar({ user, activeTab, setActiveTab, tabs, logout }) {
       </aside>
 
       <style>{`
-        @media (max-width: 768px) {
-          .mobile-sidebar-toggle {
-            display: block !important;
-          }
-          
-          .dashboard-sidebar {
-            transform: translateX(-100%);
-          }
-          
-          .dashboard-sidebar.mobile-open {
-            transform: translateX(0);
-          }
-          
-          .sidebar-overlay {
-            display: block !important;
-          }
-          
-          .sidebar-collapse-btn {
-            display: none !important;
-          }
-        }
-        
         .dashboard-sidebar::-webkit-scrollbar {
           width: 6px;
         }
-        
         .dashboard-sidebar::-webkit-scrollbar-track {
           background: transparent;
         }
-        
         .dashboard-sidebar::-webkit-scrollbar-thumb {
           background: rgba(148, 163, 184, 0.3);
           border-radius: 3px;
         }
-        
         .dashboard-sidebar::-webkit-scrollbar-thumb:hover {
           background: rgba(148, 163, 184, 0.5);
         }
