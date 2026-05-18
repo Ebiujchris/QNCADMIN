@@ -8,6 +8,7 @@ function PendingBookings({ bookings, providers, onRefresh }) {
   const [selectedProvider, setSelectedProvider] = useState('')
   const [ratePerDay, setRatePerDay] = useState('')
   const [days, setDays] = useState('')
+  const [providerPayment, setProviderPayment] = useState('')
   const [assignmentLoading, setAssignmentLoading] = useState(false)
   const { showSuccess, showError } = useToast()
 
@@ -17,20 +18,23 @@ function PendingBookings({ bookings, providers, onRefresh }) {
     if (!selectedBooking || !selectedProvider) return showError('Please select a provider')
     if (!ratePerDay || parseFloat(ratePerDay) <= 0) return showError('Please enter a valid rate per day')
     if (!days || parseInt(days) <= 0) return showError('Please enter a valid number of days')
+    if (!providerPayment || parseFloat(providerPayment) <= 0) return showError('Please enter a valid provider payment amount')
 
     setAssignmentLoading(true)
     try {
       await api.post(`/admin/bookings/${selectedBooking.id}/assign`, {
         providerId: selectedProvider,
         ratePerDay: parseFloat(ratePerDay),
-        days: parseInt(days)
+        days: parseInt(days),
+        providerPayment: parseFloat(providerPayment)
       })
 
-      showSuccess(`Provider assigned! Total: UGX ${totalPrice.toLocaleString()} (${days} day(s) × UGX ${parseFloat(ratePerDay).toLocaleString()}/day)`)
+      showSuccess(`Provider assigned! Client pays: UGX ${totalPrice.toLocaleString()}, Provider receives: UGX ${parseFloat(providerPayment).toLocaleString()}`)
       setSelectedBooking(null)
       setSelectedProvider('')
       setRatePerDay('')
       setDays('')
+      setProviderPayment('')
       onRefresh()
     } catch (error) {
       showError('Failed to assign provider. Please try again.')
@@ -44,15 +48,11 @@ function PendingBookings({ bookings, providers, onRefresh }) {
     setSelectedProvider('')
     setRatePerDay('')
     setDays('')
+    setProviderPayment('')
   }
 
   const getServiceIcon = (serviceType) => {
-    const icons = {
-      'nursing': '🏥',
-      'doctor': '👨‍⚕️',
-      'caregiver': '🤝'
-    }
-    return icons[serviceType] || '🏥'
+    return ''
   }
 
   const getUrgencyColor = (urgency) => {
@@ -79,15 +79,14 @@ function PendingBookings({ bookings, providers, onRefresh }) {
   return (
     <div>
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px'}}>
-        <h3 style={{color: '#1f2937'}}>🚨 Pending Bookings ({bookings.length})</h3>
+        <h3 style={{color: '#1f2937'}}>Pending Bookings ({bookings.length})</h3>
         <button className="btn btn-primary btn-small" onClick={onRefresh}>
-          🔄 Refresh
+          Refresh
         </button>
       </div>
 
       {bookings.length === 0 ? (
         <div style={{textAlign: 'center', padding: '60px 20px'}}>
-          <span style={{fontSize: '4rem', display: 'block', marginBottom: '16px'}}>✅</span>
           <h4 style={{color: '#1f2937', marginBottom: '8px'}}>All caught up!</h4>
           <p style={{color: '#6b7280'}}>No pending bookings require attention.</p>
         </div>
@@ -158,7 +157,7 @@ function PendingBookings({ bookings, providers, onRefresh }) {
                     className="btn btn-success"
                     style={{fontSize: '0.9rem'}}
                   >
-                    👩‍⚕️ Assign Provider
+                    Assign Provider
                   </button>
                 </div>
               </div>
@@ -171,7 +170,7 @@ function PendingBookings({ bookings, providers, onRefresh }) {
       {selectedBooking && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h3 style={{marginBottom: '20px', color: '#1f2937'}}>👩‍⚕️ Assign Healthcare Provider</h3>
+            <h3 style={{marginBottom: '20px', color: '#1f2937'}}>Assign Healthcare Provider</h3>
             
             <div style={{marginBottom: '20px', padding: '16px', backgroundColor: '#f8fafc', borderRadius: '8px'}}>
               <h4 style={{color: '#1f2937', marginBottom: '8px'}}>Booking Details:</h4>
@@ -243,12 +242,12 @@ function PendingBookings({ bookings, providers, onRefresh }) {
 
             {ratePerDay && days && (
               <div style={{
-                padding: '16px', backgroundColor: '#ecfdf5', borderRadius: '8px',
-                border: '2px solid #10b981', marginBottom: '16px'
+                padding: '16px', backgroundColor: '#f0f9ff', borderRadius: '8px',
+                border: '2px solid #3b82f6', marginBottom: '16px'
               }}>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                  <span style={{color: '#065f46', fontWeight: '600'}}>Total Service Fee:</span>
-                  <span style={{color: '#065f46', fontWeight: '700', fontSize: '1.25rem'}}>
+                  <span style={{color: '#1e40af', fontWeight: '600'}}>Client Total (Rate × Days):</span>
+                  <span style={{color: '#1e40af', fontWeight: '700', fontSize: '1.25rem'}}>
                     UGX {totalPrice.toLocaleString()}
                   </span>
                 </div>
@@ -258,14 +257,51 @@ function PendingBookings({ bookings, providers, onRefresh }) {
               </div>
             )}
 
+            <div className="form-group">
+              <label>Provider Payment (UGX)</label>
+              <div style={{position: 'relative'}}>
+                <input
+                  type="number"
+                  value={providerPayment}
+                  onChange={(e) => setProviderPayment(e.target.value)}
+                  placeholder="Enter amount provider will receive"
+                  disabled={assignmentLoading}
+                  min="0"
+                  step="1000"
+                  style={{paddingLeft: '50px'}}
+                />
+                <span style={{
+                  position: 'absolute', left: '16px', top: '50%',
+                  transform: 'translateY(-50%)', color: '#6b7280', fontWeight: '500'
+                }}>UGX</span>
+              </div>
+              <small style={{color: '#6b7280', display: 'block', marginTop: '4px'}}>
+                This is the amount the provider will see and receive (can be different from client price)
+              </small>
+            </div>
+
+            {providerPayment && (
+              <div style={{
+                padding: '16px', backgroundColor: '#ecfdf5', borderRadius: '8px',
+                border: '2px solid #10b981', marginBottom: '16px'
+              }}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <span style={{color: '#065f46', fontWeight: '600'}}>Provider Will Receive:</span>
+                  <span style={{color: '#065f46', fontWeight: '700', fontSize: '1.25rem'}}>
+                    UGX {parseFloat(providerPayment).toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            )}
+
             <div style={{display: 'flex', gap: '12px', marginTop: '24px'}}>
               <button 
                 onClick={assignProvider}
                 className="btn btn-success"
-                disabled={!selectedProvider || !ratePerDay || !days || assignmentLoading}
+                disabled={!selectedProvider || !ratePerDay || !days || !providerPayment || assignmentLoading}
                 style={{flex: 1}}
               >
-                {assignmentLoading ? <LoadingSpinner size="small" text="Assigning..." /> : '✅ Assign Provider'}
+                {assignmentLoading ? <LoadingSpinner size="small" text="Assigning..." /> : 'Assign Provider'}
               </button>
               <button 
                 onClick={resetModal}

@@ -9,6 +9,8 @@ import UserManagement from '../components/UserManagement'
 import PaymentManagement from '../components/PaymentManagement'
 import AdminRequests from '../components/AdminRequests'
 import ProviderRequests from '../components/ProviderRequests'
+import SystemNotifications from '../components/SystemNotifications'
+import UserSuspension from '../components/UserSuspension'
 import api from '../config/api'
 
 function Dashboard({ user }) {
@@ -60,13 +62,15 @@ function Dashboard({ user }) {
   }
 
   const tabs = [
-    { id: 'overview', label: '📊 Overview', icon: '📊', count: 0 },
-    { id: 'pending', label: '🚨 Pending Bookings', icon: '🚨', count: pendingBookings.length },
-    { id: 'provider-requests', label: '👩‍⚕️ Provider Apps', icon: '👩‍⚕️', count: providerRequests.length },
-    { id: 'admin-requests', label: '🔐 Admin Requests', icon: '🔐', count: adminRequests.length },
-    { id: 'bookings', label: '📋 All Bookings', icon: '📋', count: 0 },
-    { id: 'users', label: '👥 Users', icon: '👥', count: 0 },
-    { id: 'payments', label: '💰 Payments', icon: '💰', count: 0 }
+    { id: 'overview', label: 'Overview', icon: '', count: 0 },
+    { id: 'pending', label: 'Pending Bookings', icon: '', count: pendingBookings.length },
+    { id: 'provider-requests', label: 'Provider Apps', icon: '', count: providerRequests.length },
+    { id: 'admin-requests', label: 'Admin Requests', icon: '', count: adminRequests.length },
+    { id: 'bookings', label: 'All Bookings', icon: '', count: 0 },
+    { id: 'users', label: 'Users', icon: '', count: 0 },
+    { id: 'payments', label: 'Payments', icon: '', count: 0 },
+    { id: 'notifications', label: 'Send Notifications', icon: '', count: 0 },
+    { id: 'suspensions', label: 'User Suspension', icon: '', count: 0 }
   ]
 
   const logout = () => {
@@ -101,7 +105,7 @@ function Dashboard({ user }) {
       {/* Admin Header */}
       <div className="admin-header">
         <div className="container">
-          <h1>🛡️ QNC Solutions Admin Dashboard</h1>
+          <h1>QNC Solutions Admin Dashboard</h1>
           <p>Welcome back, {user.name}! Manage your healthcare system operations</p>
         </div>
       </div>
@@ -110,22 +114,18 @@ function Dashboard({ user }) {
         {/* Quick Stats Overview */}
         <div className="stats-grid">
           <div className="stat-card">
-            <span className="stat-icon">📊</span>
             <span className="stat-number">{stats.totalBookings || 0}</span>
             <span className="stat-label">Total Bookings</span>
           </div>
           <div className="stat-card">
-            <span className="stat-icon">🚨</span>
             <span className="stat-number">{pendingBookings.length}</span>
             <span className="stat-label">Pending Bookings</span>
           </div>
           <div className="stat-card">
-            <span className="stat-icon">👥</span>
             <span className="stat-number">{(stats.usersByRole?.patient || 0) + (stats.usersByRole?.provider || 0)}</span>
             <span className="stat-label">Total Users</span>
           </div>
           <div className="stat-card">
-            <span className="stat-icon">👩‍⚕️</span>
             <span className="stat-number">{providerRequests.length}</span>
             <span className="stat-label">Provider Applications</span>
           </div>
@@ -141,23 +141,23 @@ function Dashboard({ user }) {
           <h3 style={{marginBottom: '20px', color: '#1f2937'}}>Quick Actions</h3>
           <div style={{display: 'flex', gap: '16px', flexWrap: 'wrap'}}>
             <button className="btn btn-primary" onClick={refreshData}>
-              🔄 Refresh Data
+              Refresh Data
             </button>
             <button className="btn btn-success" onClick={() => setActiveTab('pending')}>
-              🚨 View Pending ({pendingBookings.length})
+              View Pending ({pendingBookings.length})
             </button>
             {providerRequests.length > 0 && (
               <button className="btn btn-info" onClick={() => setActiveTab('provider-requests')}>
-                👩‍⚕️ Provider Applications ({providerRequests.length})
+                Provider Applications ({providerRequests.length})
               </button>
             )}
             {adminRequests.length > 0 && (
               <button className="btn btn-warning" onClick={() => setActiveTab('admin-requests')}>
-                🔐 Admin Requests ({adminRequests.length})
+                Admin Requests ({adminRequests.length})
               </button>
             )}
             <button className="btn btn-warning">
-              📊 Generate Report
+              Generate Report
             </button>
             <button className="btn btn-outline">
               ⚙️ System Settings
@@ -247,6 +247,18 @@ function Dashboard({ user }) {
             {activeTab === 'payments' && (
               <PaymentManagement 
                 stats={stats}
+                onRefresh={refreshData}
+              />
+            )}
+            
+            {activeTab === 'notifications' && (
+              <SystemNotifications 
+                onRefresh={refreshData}
+              />
+            )}
+            
+            {activeTab === 'suspensions' && (
+              <UserSuspension 
                 onRefresh={refreshData}
               />
             )}

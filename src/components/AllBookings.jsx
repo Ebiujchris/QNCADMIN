@@ -32,12 +32,7 @@ function AllBookings({ bookings, onRefresh }) {
   }
 
   const getServiceIcon = (serviceType) => {
-    const icons = {
-      'nursing': '🏥',
-      'doctor': '👨‍⚕️',
-      'caregiver': '🤝'
-    }
-    return icons[serviceType] || '🏥'
+    return ''
   }
 
   const filteredBookings = bookings.filter(booking => {
@@ -58,9 +53,9 @@ function AllBookings({ bookings, onRefresh }) {
   return (
     <div>
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px'}}>
-        <h3 style={{color: '#1f2937'}}>📋 All Bookings ({filteredBookings.length})</h3>
+        <h3 style={{color: '#1f2937'}}>All Bookings ({filteredBookings.length})</h3>
         <button className="btn btn-primary btn-small" onClick={onRefresh}>
-          🔄 Refresh
+          Refresh
         </button>
       </div>
 
@@ -95,7 +90,6 @@ function AllBookings({ bookings, onRefresh }) {
       {/* Bookings List */}
       {filteredBookings.length === 0 ? (
         <div style={{textAlign: 'center', padding: '60px 20px'}}>
-          <span style={{fontSize: '4rem', display: 'block', marginBottom: '16px'}}>📋</span>
           <h4 style={{color: '#1f2937', marginBottom: '8px'}}>No bookings found</h4>
           <p style={{color: '#6b7280'}}>
             {searchTerm || filterStatus !== 'all' 
@@ -184,7 +178,7 @@ function AllBookings({ bookings, onRefresh }) {
                       className="btn btn-success btn-small"
                       style={{marginTop: '10px', width: '100%', fontSize: '0.8rem'}}
                     >
-                      {payingId === booking.id ? '⏳...' : '💳 Mark Paid'}
+                      {payingId === booking.id ? 'Processing...' : 'Mark Paid'}
                     </button>
                   )}
                 </div>

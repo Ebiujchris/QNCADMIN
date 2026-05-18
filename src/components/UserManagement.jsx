@@ -5,21 +5,18 @@ function UserManagement({ stats, providers, onRefresh }) {
     { 
       type: 'Patients', 
       count: userData.patient || 0, 
-      icon: '🏥', 
       color: '#667eea',
       description: 'Users who book healthcare services'
     },
     { 
       type: 'Providers', 
       count: userData.provider || 0, 
-      icon: '👩‍⚕️', 
       color: '#11998e',
       description: 'Healthcare professionals offering services'
     },
     { 
       type: 'Admins', 
       count: userData.admin || 0, 
-      icon: '🛡️', 
       color: '#ff6b6b',
       description: 'System administrators'
     }
@@ -33,9 +30,9 @@ function UserManagement({ stats, providers, onRefresh }) {
   return (
     <div>
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px'}}>
-        <h3 style={{color: '#1f2937'}}>👥 User Management</h3>
+        <h3 style={{color: '#1f2937'}}>User Management</h3>
         <button className="btn btn-primary btn-small" onClick={onRefresh}>
-          🔄 Refresh
+          Refresh
         </button>
       </div>
 
@@ -56,25 +53,22 @@ function UserManagement({ stats, providers, onRefresh }) {
       {/* Provider Breakdown */}
       <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '32px'}}>
         <div className="card">
-          <h4 style={{marginBottom: '16px', color: '#1f2937'}}>👩‍⚕️ Provider Specializations</h4>
+          <h4 style={{marginBottom: '16px', color: '#1f2937'}}>Provider Specializations</h4>
           <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
               <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                <span>🏥</span>
                 <span style={{color: '#374151'}}>Nurses</span>
               </div>
               <span style={{fontWeight: '600', color: '#1f2937'}}>{providerBreakdown.nurse || 0}</span>
             </div>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
               <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                <span>👨‍⚕️</span>
                 <span style={{color: '#374151'}}>Doctors</span>
               </div>
               <span style={{fontWeight: '600', color: '#1f2937'}}>{providerBreakdown.doctor || 0}</span>
             </div>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
               <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                <span>🤝</span>
                 <span style={{color: '#374151'}}>Caregivers</span>
               </div>
               <span style={{fontWeight: '600', color: '#1f2937'}}>{providerBreakdown.caregiver || 0}</span>
@@ -83,7 +77,7 @@ function UserManagement({ stats, providers, onRefresh }) {
         </div>
 
         <div className="card">
-          <h4 style={{marginBottom: '16px', color: '#1f2937'}}>📊 User Growth Insights</h4>
+          <h4 style={{marginBottom: '16px', color: '#1f2937'}}>User Growth Insights</h4>
           <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
             <div style={{padding: '12px', backgroundColor: '#f0f9ff', borderRadius: '6px'}}>
               <p style={{fontSize: '0.875rem', color: '#1e40af', margin: 0}}>
@@ -106,10 +100,9 @@ function UserManagement({ stats, providers, onRefresh }) {
 
       {/* Provider Details */}
       <div className="card">
-        <h4 style={{marginBottom: '16px', color: '#1f2937'}}>👩‍⚕️ Active Providers</h4>
+        <h4 style={{marginBottom: '16px', color: '#1f2937'}}>Active Providers</h4>
         {providers.length === 0 ? (
           <div style={{textAlign: 'center', padding: '40px 20px'}}>
-            <span style={{fontSize: '3rem', display: 'block', marginBottom: '16px'}}>👩‍⚕️</span>
             <h4 style={{color: '#1f2937', marginBottom: '8px'}}>No providers registered</h4>
             <p style={{color: '#6b7280'}}>Encourage healthcare professionals to join the platform.</p>
           </div>
@@ -129,10 +122,6 @@ function UserManagement({ stats, providers, onRefresh }) {
                   <tr key={provider.id}>
                     <td>
                       <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                        <span>
-                          {provider.provider_type === 'nurse' ? '🏥' : 
-                           provider.provider_type === 'doctor' ? '👨‍⚕️' : '🤝'}
-                        </span>
                         <span style={{fontWeight: '500'}}>{provider.name}</span>
                       </div>
                     </td>
@@ -175,16 +164,16 @@ function UserManagement({ stats, providers, onRefresh }) {
         <h4 style={{marginBottom: '16px', color: '#1f2937'}}>⚙️ Management Actions</h4>
         <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap'}}>
           <button className="btn btn-outline">
-            📊 Export User Data
+            Export User Data
           </button>
           <button className="btn btn-outline">
-            📧 Send Notifications
+            Send Notifications
           </button>
           <button className="btn btn-outline">
-            🔍 Advanced Search
+            Advanced Search
           </button>
           <button className="btn btn-warning">
-            ⚠️ Manage Suspensions
+            Manage Suspensions
           </button>
         </div>
       </div>

@@ -25,10 +25,10 @@ function Toast({ message, type = 'info', duration = 5000, onClose }) {
 
   const getIcon = () => {
     switch (type) {
-      case 'success': return '✅'
-      case 'error': return '❌'
-      case 'warning': return '⚠️'
-      default: return 'ℹ️'
+      case 'success': return ''
+      case 'error': return ''
+      case 'warning': return ''
+      default: return ''
     }
   }
 

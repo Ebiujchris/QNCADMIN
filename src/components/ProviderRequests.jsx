@@ -38,7 +38,7 @@ function ProviderRequests({ onRefresh }) {
     }
   }
 
-  const typeIcon = { nurse: '👩‍⚕️', doctor: '👨‍⚕️', caregiver: '🤝' }
+  const typeIcon = { nurse: '', doctor: '', caregiver: '' }
   const typeName = { nurse: 'Registered Nurse', doctor: 'General Practitioner', caregiver: 'Professional Caregiver' }
 
   const Field = ({ label, value }) => (
@@ -57,13 +57,12 @@ function ProviderRequests({ onRefresh }) {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h3 style={{ color: '#1f2937' }}>👩‍⚕️ Provider Applications ({requests.length})</h3>
-        <button className="btn btn-outline btn-small" onClick={fetchProviderRequests}>🔄 Refresh</button>
+        <h3 style={{ color: '#1f2937' }}>Provider Applications ({requests.length})</h3>
+        <button className="btn btn-outline btn-small" onClick={fetchProviderRequests}>Refresh</button>
       </div>
 
       {requests.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '48px' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '16px' }}>✅</div>
           <h4 style={{ color: '#1f2937', marginBottom: '8px' }}>No Pending Applications</h4>
           <p style={{ color: '#6b7280' }}>All provider applications have been processed</p>
         </div>
@@ -97,21 +96,21 @@ function ProviderRequests({ onRefresh }) {
                     className="btn btn-outline btn-small"
                     onClick={() => setSelected(req)}
                   >
-                    🔍 View Details
+                    View Details
                   </button>
                   <button
                     className="btn btn-success btn-small"
                     onClick={() => handleRequest(req.id, 'approve')}
                     disabled={processing[req.id]}
                   >
-                    {processing[req.id] ? '⏳' : '✅ Approve'}
+                    {processing[req.id] ? 'Processing...' : 'Approve'}
                   </button>
                   <button
                     className="btn btn-danger btn-small"
                     onClick={() => handleRequest(req.id, 'reject')}
                     disabled={processing[req.id]}
                   >
-                    {processing[req.id] ? '⏳' : '❌ Reject'}
+                    {processing[req.id] ? 'Processing...' : 'Reject'}
                   </button>
                 </div>
               </div>
@@ -218,9 +217,9 @@ function ProviderRequests({ onRefresh }) {
                 </h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   {[
-                    { label: '📋 Professional License', url: selected.doc_license_url, required: true },
-                    { label: '🎓 Certificate / Diploma', url: selected.doc_certificate_url, required: false },
-                    { label: '📄 CV / Resume', url: selected.doc_cv_url, required: false }
+                    { label: 'Professional License', url: selected.doc_license_url, required: true },
+                    { label: 'Certificate / Diploma', url: selected.doc_certificate_url, required: false },
+                    { label: 'CV / Resume', url: selected.doc_cv_url, required: false }
                   ].map(doc => (
                     <div key={doc.label} style={{
                       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -268,7 +267,7 @@ function ProviderRequests({ onRefresh }) {
                   onClick={() => handleRequest(selected.id, 'approve')}
                   disabled={processing[selected.id]}
                 >
-                  {processing[selected.id] ? '⏳ Processing...' : '✅ Approve Provider'}
+                  {processing[selected.id] ? 'Processing...' : 'Approve Provider'}
                 </button>
                 <button
                   className="btn btn-danger"
@@ -276,7 +275,7 @@ function ProviderRequests({ onRefresh }) {
                   onClick={() => handleRequest(selected.id, 'reject')}
                   disabled={processing[selected.id]}
                 >
-                  {processing[selected.id] ? '⏳ Processing...' : '❌ Reject Application'}
+                  {processing[selected.id] ? 'Processing...' : 'Reject Application'}
                 </button>
                 <button className="btn btn-outline" onClick={() => setSelected(null)}>
                   Cancel

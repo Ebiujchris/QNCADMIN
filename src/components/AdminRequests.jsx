@@ -52,15 +52,14 @@ function AdminRequests({ onRefresh }) {
   return (
     <div>
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px'}}>
-        <h3 style={{color: '#1f2937'}}>🔐 Admin Access Requests</h3>
+        <h3 style={{color: '#1f2937'}}>Admin Access Requests</h3>
         <button className="btn btn-outline" onClick={fetchAdminRequests}>
-          🔄 Refresh
+          Refresh
         </button>
       </div>
 
       {requests.length === 0 ? (
         <div className="card" style={{textAlign: 'center', padding: '48px'}}>
-          <div style={{fontSize: '3rem', marginBottom: '16px'}}>✅</div>
           <h4 style={{color: '#1f2937', marginBottom: '8px'}}>No Pending Requests</h4>
           <p style={{color: '#6b7280'}}>All admin access requests have been processed</p>
         </div>
@@ -71,7 +70,6 @@ function AdminRequests({ onRefresh }) {
               <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', flexWrap: 'wrap', gap: '12px'}}>
                 <div style={{flex: 1, minWidth: '200px'}}>
                   <div style={{display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px'}}>
-                    <span style={{fontSize: '1.5rem'}}>👤</span>
                     <div>
                       <h4 style={{color: '#1f2937', margin: 0}}>{request.name}</h4>
                       <p style={{color: '#6b7280', margin: 0, fontSize: '0.875rem'}}>{request.email}</p>
@@ -88,8 +86,8 @@ function AdminRequests({ onRefresh }) {
                   </div>
 
                   <div style={{display: 'flex', gap: '16px', fontSize: '0.875rem', color: '#6b7280', flexWrap: 'wrap'}}>
-                    <span>📅 Requested: {new Date(request.created_at).toLocaleDateString()}</span>
-                    <span>👤 User Since: {new Date(request.user_created_at).toLocaleDateString()}</span>
+                    <span>Requested: {new Date(request.created_at).toLocaleDateString()}</span>
+                    <span>User Since: {new Date(request.user_created_at).toLocaleDateString()}</span>
                   </div>
                 </div>
 
@@ -99,14 +97,14 @@ function AdminRequests({ onRefresh }) {
                     onClick={() => handleRequest(request.id, 'approve')}
                     disabled={processing[request.id]}
                   >
-                    {processing[request.id] ? '⏳' : '✅ Approve'}
+                    {processing[request.id] ? 'Processing...' : 'Approve'}
                   </button>
                   <button
                     className="btn btn-danger btn-small"
                     onClick={() => handleRequest(request.id, 'reject')}
                     disabled={processing[request.id]}
                   >
-                    {processing[request.id] ? '⏳' : '❌ Reject'}
+                    {processing[request.id] ? 'Processing...' : 'Reject'}
                   </button>
                 </div>
               </div>
@@ -146,7 +144,6 @@ function AdminRequests({ onRefresh }) {
       {/* Info Card */}
       <div className="card" style={{marginTop: '24px', backgroundColor: '#eff6ff', border: '1px solid #dbeafe'}}>
         <div style={{display: 'flex', alignItems: 'flex-start', gap: '12px'}}>
-          <span style={{fontSize: '1.5rem'}}>ℹ️</span>
           <div>
             <h4 style={{color: '#1e40af', margin: '0 0 8px 0'}}>Admin Approval Process</h4>
             <ul style={{color: '#1e40af', margin: 0, paddingLeft: '20px'}}>

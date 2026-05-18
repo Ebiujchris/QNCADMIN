@@ -59,7 +59,7 @@ function Login({ setUser }) {
       {/* Admin Header */}
       <div className="admin-header">
         <div className="container">
-          <h1>🛡️ QNC Solutions Admin Panel</h1>
+          <h1>QNC Solutions Admin Panel</h1>
           <p>Secure access for system administrators</p>
         </div>
       </div>
@@ -131,7 +131,7 @@ function Login({ setUser }) {
 
           <div style={{textAlign: 'center', marginTop: '20px', padding: '16px', backgroundColor: '#fee2e2', borderRadius: '8px', border: '1px solid #fca5a5'}}>
             <p style={{fontSize: '0.875rem', color: '#991b1b'}}>
-              <strong>⚠️ Security Notice:</strong><br />
+              <strong>Security Notice:</strong><br />
               This panel provides full system access. Only authorized administrators should use this interface.
             </p>
           </div>

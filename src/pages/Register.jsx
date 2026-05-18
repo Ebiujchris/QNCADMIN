@@ -69,7 +69,7 @@ function Register() {
       {/* Admin Header */}
       <div className="admin-header">
         <div className="container">
-          <h1>🛡️ Admin Access Request</h1>
+          <h1>Admin Access Request</h1>
           <p>Request administrator access to QNC Solutions</p>
         </div>
       </div>
@@ -157,7 +157,7 @@ function Register() {
               style={{width: '100%', marginTop: '8px'}}
               disabled={loading}
             >
-              {loading ? <LoadingSpinner size="small" text="Submitting Request..." /> : '🛡️ Request Admin Access'}
+              {loading ? <LoadingSpinner size="small" text="Submitting Request..." /> : 'Request Admin Access'}
             </button>
           </form>
 
@@ -172,7 +172,7 @@ function Register() {
 
           <div style={{textAlign: 'center', marginTop: '20px', padding: '16px', backgroundColor: '#fee2e2', borderRadius: '8px', border: '1px solid #fca5a5'}}>
             <p style={{fontSize: '0.875rem', color: '#991b1b'}}>
-              <strong>⚠️ Important:</strong><br />
+              <strong>Important:</strong><br />
               Admin access provides full system control. Only request access if you have legitimate administrative responsibilities.
             </p>
           </div>

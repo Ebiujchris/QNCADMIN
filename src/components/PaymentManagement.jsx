@@ -93,7 +93,7 @@ function PaymentManagement({ stats, onRefresh }) {
                 color: 'white', padding: '8px 20px', borderRadius: '8px',
                 fontSize: '1.1rem', fontWeight: '700', marginBottom: '8px'
               }}>
-                {isReceipt ? '✅ RECEIPT' : '📄 INVOICE'}
+                {isReceipt ? 'RECEIPT' : 'INVOICE'}
               </div>
               <p style={{ color: '#6b7280', fontSize: '0.85rem', margin: '4px 0' }}>
                 #{isReceipt ? 'RCP' : 'INV'}-{String(invoiceData.id).padStart(4, '0')}
@@ -169,7 +169,7 @@ function PaymentManagement({ stats, onRefresh }) {
             border: `1px solid ${isPaid ? '#d1fae5' : '#fbbf24'}`
           }}>
             <p style={{ margin: 0, fontWeight: '700', fontSize: '1rem', color: isPaid ? '#065f46' : '#92400e' }}>
-              {isPaid ? '✅ PAYMENT CONFIRMED' : '⏳ PAYMENT PENDING'}
+              {isPaid ? 'PAYMENT CONFIRMED' : 'PAYMENT PENDING'}
             </p>
           </div>
 
@@ -189,24 +189,21 @@ function PaymentManagement({ stats, onRefresh }) {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h3 style={{ color: '#1f2937' }}>💰 Payment Management</h3>
-        <button className="btn btn-outline btn-small" onClick={fetchAll}>🔄 Refresh</button>
+        <h3 style={{ color: '#1f2937' }}>Payment Management</h3>
+        <button className="btn btn-outline btn-small" onClick={fetchAll}>Refresh</button>
       </div>
 
       {/* Stats */}
       <div className="stats-grid" style={{ marginBottom: '32px' }}>
         <div className="stat-card">
-          <span className="stat-icon">💰</span>
           <span className="stat-number">UGX {paymentStats.totalRevenue.toLocaleString()}</span>
           <span className="stat-label">Total Revenue</span>
         </div>
         <div className="stat-card">
-          <span className="stat-icon">📊</span>
           <span className="stat-number">{paymentStats.totalPayments}</span>
           <span className="stat-label">Paid Invoices</span>
         </div>
         <div className="stat-card">
-          <span className="stat-icon">⏳</span>
           <span className="stat-number">{unpaid.length}</span>
           <span className="stat-label">Pending Payments</span>
         </div>
@@ -219,9 +216,9 @@ function PaymentManagement({ stats, onRefresh }) {
 
       {/* Pending Payments — Send Reminders */}
       <div className="card" style={{ marginBottom: '24px' }}>
-        <h4 style={{ marginBottom: '16px', color: '#1f2937' }}>⏳ Pending Payments — Send Reminders</h4>
+        <h4 style={{ marginBottom: '16px', color: '#1f2937' }}>Pending Payments — Send Reminders</h4>
         {unpaid.length === 0 ? (
-          <p style={{ color: '#6b7280', textAlign: 'center', padding: '20px' }}>✅ No outstanding payments.</p>
+          <p style={{ color: '#6b7280', textAlign: 'center', padding: '20px' }}>No outstanding payments.</p>
         ) : (
           <div style={{ overflowX: 'auto' }}>
             <table className="table">
@@ -254,13 +251,13 @@ function PaymentManagement({ stats, onRefresh }) {
                           onClick={() => sendReminder(b.id, b.patient_name)}
                           disabled={reminderLoading[b.id]}
                         >
-                          {reminderLoading[b.id] ? '⏳...' : '📧 Remind'}
+                          {reminderLoading[b.id] ? 'Sending...' : 'Remind'}
                         </button>
                         <button
                           className="btn btn-outline btn-small"
                           onClick={() => openDocument(b.id, 'invoice')}
                         >
-                          📄 Invoice
+                          Invoice
                         </button>
                       </div>
                     </td>
@@ -274,7 +271,7 @@ function PaymentManagement({ stats, onRefresh }) {
 
       {/* Per-Patient Revenue */}
       <div className="card" style={{ marginBottom: '24px' }}>
-        <h4 style={{ marginBottom: '16px', color: '#1f2937' }}>👥 Per-Patient Revenue</h4>
+        <h4 style={{ marginBottom: '16px', color: '#1f2937' }}>Per-Patient Revenue</h4>
         {paymentStats.perPatient.length === 0 ? (
           <p style={{ color: '#6b7280', textAlign: 'center', padding: '20px' }}>No billing data yet.</p>
         ) : (
@@ -302,7 +299,7 @@ function PaymentManagement({ stats, onRefresh }) {
                       <td style={{ fontWeight: '600', color: '#1f2937' }}>UGX {parseFloat(p.total_billed).toLocaleString()}</td>
                       <td style={{ fontWeight: '600', color: '#10b981' }}>UGX {parseFloat(p.total_paid).toLocaleString()}</td>
                       <td style={{ fontWeight: '600', color: outstanding > 0 ? '#ef4444' : '#10b981' }}>
-                        {outstanding > 0 ? `UGX ${outstanding.toLocaleString()}` : '✅ Cleared'}
+                        {outstanding > 0 ? `UGX ${outstanding.toLocaleString()}` : 'Cleared'}
                       </td>
                     </tr>
                   )
@@ -324,12 +321,11 @@ function PaymentManagement({ stats, onRefresh }) {
 
       {/* Payment History with Receipt buttons */}
       <div className="card">
-        <h4 style={{ marginBottom: '16px', color: '#1f2937' }}>📋 Payment History</h4>
+        <h4 style={{ marginBottom: '16px', color: '#1f2937' }}>Payment History</h4>
         {loading ? (
           <LoadingSpinner text="Loading..." />
         ) : payments.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '40px' }}>
-            <span style={{ fontSize: '3rem', display: 'block', marginBottom: '12px' }}>💰</span>
             <p style={{ color: '#6b7280' }}>No payments recorded yet.</p>
           </div>
         ) : (
@@ -385,7 +381,7 @@ function PaymentManagement({ stats, onRefresh }) {
                             className="btn btn-outline btn-small"
                             onClick={() => openDocument(p.booking_id, 'invoice')}
                           >
-                            📄 Invoice
+                            Invoice
                           </button>
                         )}
                       </div>
